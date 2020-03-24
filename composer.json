@@ -1,0 +1,48 @@
+{
+    "name": "v-dem/queasy-framework",
+    "description": "Queasy PHP framework, main package",
+    "homepage": "https://github.com/v-dem/queasy-framework/",
+    "keywords": ["php", "framework"],
+    "license": "LGPL-3.0-only",
+    "version": "1.0.0",
+    "minimum-stability": "dev",
+    "authors": [
+        {
+            "name": "Vitaly Demyanenko",
+            "email": "vitaly_demyanenko@yahoo.com"
+        }
+    ],
+    "config": {
+        "preferred-install": "dist"
+    },
+    "require": {
+        "php": ">=5.3.0|>=7.0.0"
+    },
+    "require-dev": {
+        "php": ">=7.1.0",
+        "phpunit/phpunit": "~7",
+        "v-dem/queasy-helper": "dev-master",
+        "v-dem/queasy-config": "dev-master",
+        "v-dem/queasy-log": "dev-master",
+        "v-dem/queasy-db": "dev-master",
+        "ext-xdebug": "^2.6.0"
+    },
+    "suggest": {
+        "queasy/config": "Configuration provider package, supports PHP (and multifile configs in this case), INI, XML and JSON (and YAML in future) formats",
+        "queasy/log": "PSR-3 compatible logger package, supports file system log writer, console and email (using mail() function)"
+        "queasy/db": "PDO wrapper classes"
+    },
+    "autoload":{
+        "psr-4":{
+            "queasy\\framework\\": "src/"
+        }
+    },
+    "autoload-dev":{
+        "psr-4":{
+            "queasy\\framework\\tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit --coverage-clover coverage.xml"
+    }
+}
