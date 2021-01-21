@@ -2,41 +2,27 @@
 
 namespace queasy\framework;
 
-use Psr\Log\NullLogger;
-use Psr\Log\LoggerInterface;
-use Psr\Log\LoggerAwareInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class App implements Psr\Log\LoggerAwareInterface
 {
     protected $config;
 
-    protected $logger;
+    protected $serviceLocator;
 
-    public function __construct($config)
+    public function __construct($config, $serviceLocator)
     {
         $this->config = $config;
-
-        $this->logger = new Psr\Log\NullLogger();
+        $this->serviceLocator = $serviceLocator;
     }
 
-    public function handle(ServerRequestInterface $request)
+    public function __get($service)
     {
+        return $this->$service;
     }
 
-    public function config()
+    public function run(ServerRequestInterface $request)
     {
-        return $this->config;
-    }
-
-    public function setLogger(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
-    }
-
-    public function logger()
-    {
-        return $this->logger();
     }
 }
 
