@@ -1,6 +1,6 @@
 <?php
 
-namespace app\controller;
+namespace queasy\framework;
 
 use queasy\http\ServerRequest;
 
