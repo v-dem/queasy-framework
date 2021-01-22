@@ -2,7 +2,7 @@
 
 namespace queasy\framework;
 
-use queasy\http\ServerRequest;
+use Psr\Http\Message\ServerRequestInterface;
 
 class Controller
 {
@@ -10,7 +10,7 @@ class Controller
     
     protected $request;
 
-    public function __construct(App $app, ServerRequest $request)
+    public function __construct(App $app, ServerRequestInterface $request)
     {
         $this->app = $app;
         $this->request = $request;

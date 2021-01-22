@@ -4,7 +4,7 @@ namespace queasy\framework;
 
 use Psr\Http\Message\ServerRequestInterface;
 
-class App implements Psr\Log\LoggerAwareInterface
+class App
 {
     protected $config;
 
