@@ -1,6 +1,6 @@
 <?php
 
-namespace queasy\framework;
+namespace queasy\framework\container;
 
 use Psr\Log\NullLogger;
 
@@ -20,12 +20,17 @@ class ServiceContainer
         }
     }
 
-    public function __get($service)
+    public function has($service)
+    {
+        return isset($this->config[$service]);
+    }
+
+    public function get($service)
     {
         if (isset($this->services[$service])) {
             return $this->services[$service];
-        } elseif (isset($this->servicesConfig[$service])) {
-            $serviceConfig = $this->servicesConfig[$service];
+        } elseif (isset($this->config[$service])) {
+            $serviceConfig = $this->config[$service];
             $serviceClass = $serviceConfig['class'];
 
             $args = array();
@@ -33,11 +38,11 @@ class ServiceContainer
                 if (is_array($serviceConfig['construct'])) {
                     foreach($serviceConfig['construct'] as $argConfig) {
                         if (!is_array($argConfig)) {
-                            throw new Exception(sprintf('Service "%s": Constructor argument declaration must be of type "array", "%s" given.', $service, gettype($argConfig)));
+                            throw new ContainerException(sprintf('Service "%s": Constructor argument declaration must be of type "array", "%s" given.', $service, gettype($argConfig)));
                         }
 
                         if (!isset($argConfig['value'])) {
-                            throw new Exception(sprintf('Service "%s": Missing value in constructor argument.', $service));
+                            throw new ContainerException(sprintf('Service "%s": Missing value in constructor argument.', $service));
                         }
 
                         $type = isset($argConfig['type'])
@@ -61,6 +66,8 @@ class ServiceContainer
                     throw new Exception();
                 }
             }
+        } else {
+            throw new NotFoundException(sprintf('Service "%s" is not configured.', $service));
         }
     }
 }

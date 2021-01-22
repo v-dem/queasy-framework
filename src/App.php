@@ -8,21 +8,22 @@ class App implements Psr\Log\LoggerAwareInterface
 {
     protected $config;
 
-    protected $serviceLocator;
+    protected $serviceContainer;
 
-    public function __construct($config, $serviceLocator)
+    public function __construct($config, $serviceContainer)
     {
         $this->config = $config;
-        $this->serviceLocator = $serviceLocator;
+        $this->serviceContainer = $serviceContainer;
     }
 
     public function __get($service)
     {
-        return $this->$service;
+        return $this->serviceContainer->get($service);
     }
 
     public function run(ServerRequestInterface $request)
     {
+        
     }
 }
 
