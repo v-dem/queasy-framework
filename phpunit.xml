@@ -9,7 +9,8 @@
          processIsolation="false"
          stopOnFailure="false"
          beStrictAboutTestsThatDoNotTestAnything="true"
-         beStrictAboutOutputDuringTests="true">
+         beStrictAboutOutputDuringTests="true"
+         resolveDependencies="true">
     <testsuites>
         <testsuite name="Unit">
             <directory suffix="Test.php">./tests/src/</directory>
@@ -21,7 +22,7 @@
     </logging>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">src</directory>
+            <directory suffix=".php">./src/</directory>
         </whitelist>
     </filter>
 </phpunit>

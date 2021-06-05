@@ -18,6 +18,10 @@ class App
 
     public function __get($service)
     {
+        if ('config' === $service) {
+            return $this->config;
+        }
+
         return $this->serviceContainer->get($service);
     }
 

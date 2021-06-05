@@ -39,7 +39,7 @@
     },
     "autoload-dev":{
         "psr-4":{
-            "queasy\\framework\\tests\\": "tests/"
+            "queasy\\framework\\tests\\": "tests/src/"
         }
     },
     "scripts": {

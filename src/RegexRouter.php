@@ -19,14 +19,14 @@ class RegexRouter implements RouteInterface
         $this->request = $request;
     }
 
-    public function match($path)
+    public function match($url)
     {
-        return preg_match($this->route, $path);
+        return preg_match($this->route, $url);
     }
 
-    public function route($path)
+    public function route($url)
     {
-        if (preg_match($this->route, $path, $args)) {
+        if (preg_match($this->route, $url, $args)) {
             array_shift($args);
             array_unshift($matches, $this->request);
             if (is_callable($this->handler)) {

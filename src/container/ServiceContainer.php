@@ -4,7 +4,7 @@ namespace queasy\framework\container;
 
 use Psr\Log\NullLogger;
 
-class ServiceContainer
+class ServiceContainer implements ServiceContainerInterface
 {
     protected $config;
 
@@ -32,43 +32,64 @@ class ServiceContainer
         } elseif (isset($this->config[$service])) {
             $serviceConfig = $this->config[$service];
             $serviceClass = $serviceConfig['class'];
-
-            $args = array();
             if (isset($serviceConfig['construct'])) {
-                if (is_array($serviceConfig['construct'])) {
-                    foreach($serviceConfig['construct'] as $argConfig) {
-                        if (!is_array($argConfig)) {
-                            throw new ContainerException(sprintf('Service "%s": Constructor argument declaration must be of type "array", "%s" given.', $service, gettype($argConfig)));
-                        }
-
-                        if (!isset($argConfig['value'])) {
-                            throw new ContainerException(sprintf('Service "%s": Missing value in constructor argument.', $service));
-                        }
-
-                        $type = isset($argConfig['type'])
-                            ? $argConfig['type']
-                            : 'value';
-
-                        $value = $argConfig['value'];
-
-                        switch ($type) {
-                            case 'service':
-                                $args[] = 
-                                break;
-
-                            case 'value':
-                            default:
-                                
-                                break;
-                        }
-                    }
+                $args = $this->parseArgs($serviceConfig['construct']);
+                if (version_compare(PHP_VERSION, '5.6.0', '>=')) {
+                    $serviceInstance = new $serviceClass(...$args);
                 } else {
-                    throw new Exception();
+                    $reflect = new ReflectionClass($serviceClass);
+                    $serviceInstance = $reflect->newInstanceArgs($args);
                 }
+            } else {
+                $serviceInstance = new $serviceClass();
             }
+
+            foreach ($serviceConfig as $method => $args) {
+                if (('class' === $method) || ('construct' === $method)) {
+                    continue;
+                }
+
+                call_user_func_array(array($serviceInstance, $method), $this->parseArgs($args));
+            }
+
+            $this->services[$service] = $serviceInstance;
+
+            return $serviceInstance;
         } else {
             throw new NotFoundException(sprintf('Service "%s" is not configured.', $service));
         }
+    }
+
+    public function __get($service)
+    {
+        return $this->get($service);
+    }
+
+    public function __isset($service)
+    {
+        return $this->has($service);
+    }
+
+    private function parseArgs($args)
+    {
+        $result = [];
+        foreach ($args as $arg) {
+            foreach ($arg as $argType => $argValue) {
+                if ('value' === $argType) {
+                    $result[] = $argValue;
+                } elseif ('service' === $argType) {
+                    if ('this' === $argValue) {
+                        $result[] = $this;
+                    } else {
+                        $result[] = $this->$argValue;
+                    }
+                } else {
+                    throw new ContainerException(sprintf('Unknown argument type "%s".', $argType));
+                }
+            }
+        }
+
+        return $result;
     }
 }
 

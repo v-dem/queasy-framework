@@ -4,8 +4,8 @@ namespace queasy\framework;
 
 interface RouteInterface
 {
-    public function match($path);
+    public function match($url);
     
-    public function route($path);
+    public function route($url);
 }
 
