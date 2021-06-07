@@ -25,9 +25,10 @@ class App
         return $this->serviceContainer->get($service);
     }
 
-    public function run(ServerRequestInterface $request)
+    public function run()
     {
         try {
+            $request = $this->serviceContainer->get('request');
             $routeEntry = $this->router->route($request);
             $handler = $routeEntry->getHandler();
             $arguments = $routeEntry->getArguments();
