@@ -17,7 +17,7 @@ class RegexRouter implements RouteInterface
     {
         $path = $request->getUri()->getPath();
 
-        $route = $this->routeLookup($path, $this->routes);
+        $route = $this->routeLookup($this->routes, $path);
 
         if (null == $route) {
             throw new RouteNotFoundException(sprintf('Route "%s" not found.', $path));
