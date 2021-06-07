@@ -6,37 +6,37 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class RegexRouter implements RouteInterface
 {
-    private $route;
+    private $routes;
 
-    private $handler;
-
-    private $request;
-
-    public function __construct($route, $handler, ServerRequestInterface $request)
+    public function __construct($routes)
     {
-        $this->route = $route;
-        $this->handler = $handler;
-        $this->request = $request;
+        $this->routes = $routes;
     }
 
-    public function match($url)
+    public function route(ServerRequestInterface $request)
     {
-        return preg_match($this->route, $url);
+        $path = $request->getUri()->getPath();
+
+        $route = $this->routeLookup($path, $this->routes);
+
+        if (null == $route) {
+            throw new RouteNotFoundException(sprintf('Route "%s" not found.', $path));
+        }
+
+        return $route;
     }
 
-    public function route($url)
+    private function routeLookup($routes, $path)
     {
-        if (preg_match($this->route, $url, $args)) {
-            array_shift($args);
-            array_unshift($matches, $this->request);
-            if (is_callable($this->handler)) {
-                $handler = $this->handler;
+        foreach ($this->routes as $route => $handler) {
+            if (preg_match($route, $path, $matches)) {
+                if (is_array($handler)) {
+                    return $this->routeLookup($handler, $path);
+                }
 
+                array_shift($matches);
 
-                return call_user_func_array($this->handler, $args);
-            } elseif (is_string($this->handler)) {
-                $class = $this->handler;
-                $controller = new $class();
+                return new RouteEntry($handler, $matches);
             }
         }
     }

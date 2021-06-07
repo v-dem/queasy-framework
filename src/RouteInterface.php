@@ -2,10 +2,10 @@
 
 namespace queasy\framework;
 
+use Psr\Http\Message\ServerRequestInterface;
+
 interface RouteInterface
 {
-    public function match($url);
-    
-    public function route($url);
+    public function route(ServerRequestInterface $request);
 }
 
