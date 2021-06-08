@@ -29,7 +29,7 @@ class Controller
         $__body = ob_get_contents();
         ob_end_clean();
 
-        return $this->app->response->withBody(new Stream($__body))->withResponseCode($__responseCode);
+        return $this->app->response->withBody(new Stream($__body))->withStatus($__responseCode);
     }
 }
 
