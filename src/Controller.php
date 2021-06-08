@@ -4,6 +4,8 @@ namespace queasy\framework;
 
 use Psr\Http\Message\ServerRequestInterface;
 
+use queasy\http\Stream;
+
 class Controller
 {
     protected $app;
@@ -27,7 +29,7 @@ class Controller
         $__body = ob_get_contents();
         ob_end_clean();
 
-        return $this->app->response->withBody($__body)->withResponseCode($__responseCode);
+        return $this->app->response->withBody(new Stream($__body))->withResponseCode($__responseCode);
     }
 }
 
