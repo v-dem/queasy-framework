@@ -33,11 +33,9 @@ class App
             $handler = $routeEntry->getHandler();
             $arguments = $routeEntry->getArguments();
             if (is_callable($handler)) {
-                array_unshift($arguments, $request);
-
                 return call_user_func_array($handler, $arguments);
             } elseif (is_string($handler)) {
-                $controller = new $handler($this, $request);
+                $controller = new $handler($this);
                 $method = strtolower($request->getMethod());
 
                 return call_user_func_array(array($controller, $method), $arguments);

@@ -10,12 +10,9 @@ class Controller
 {
     protected $app;
     
-    protected $request;
-
-    public function __construct(App $app, ServerRequestInterface $request)
+    public function __construct(App $app)
     {
         $this->app = $app;
-        $this->request = $request;
     }
 
     protected function view($__page, array $__data = array(), $__responseCode = 200)
@@ -24,7 +21,9 @@ class Controller
 
         ob_start();
 
-        require($__page);
+        require(isset($this->app->config['viewsPath'])
+            ? $this->app->config['viewsPath'] . $__page
+            : $__page);
 
         $__body = ob_get_contents();
         ob_end_clean();
