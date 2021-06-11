@@ -4,16 +4,20 @@ namespace queasy\framework;
 
 use Psr\Http\Message\ServerRequestInterface;
 
+use queasy\framework\container\ServiceContainerInterface;
+
 class App
 {
     protected $config;
 
     protected $serviceContainer;
 
-    public function __construct($config, $serviceContainer)
+    public function __construct($config, ServiceContainerInterface $serviceContainer)
     {
         $this->config = $config;
         $this->serviceContainer = $serviceContainer;
+
+        $this->init();
     }
 
     public function __get($service)
@@ -23,6 +27,10 @@ class App
         }
 
         return $this->serviceContainer->get($service);
+    }
+
+    public function init()
+    {
     }
 
     public function run()
