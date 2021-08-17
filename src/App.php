@@ -29,10 +29,6 @@ class App
         return $this->serviceContainer->get($service);
     }
 
-    public function init()
-    {
-    }
-
     public function run()
     {
         try {
@@ -53,6 +49,10 @@ class App
         } catch (RouteNotFoundException $e) {
             return $this->page404($request);
         }
+    }
+
+    protected function init()
+    {
     }
 }
 

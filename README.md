@@ -1,2 +1,4 @@
 # queasy-framework
-Queasy PHP Framework
+QuEasy PHP Framework
+
+* In development stage.

@@ -1,8 +1,8 @@
 {
     "name": "v-dem/queasy-framework",
-    "description": "Queasy PHP framework, main package",
+    "description": "QuEasy PHP framework, main package",
     "homepage": "https://github.com/v-dem/queasy-framework/",
-    "keywords": ["php", "framework"],
+    "keywords": ["php", "framework", "mvc"],
     "license": "LGPL-3.0-only",
     "version": "1.0.0",
     "minimum-stability": "dev",
@@ -30,7 +30,7 @@
     "suggest": {
         "queasy/config": "Configuration provider package, supports PHP (and multifile configs in this case), INI, XML and JSON (and YAML in future) formats",
         "queasy/log": "PSR-3 compatible logger package, supports file system log writer, console and email (using mail() function)",
-        "queasy/db": "PDO wrapper classes"
+        "queasy/db": "PDO wrapper classes, simple SQL builder"
     },
     "autoload":{
         "psr-4":{
