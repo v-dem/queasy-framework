@@ -17,4 +17,5 @@ QuEasy PHP Framework main classes.
 ### References
 
 [Sample application](https://github.com/v-dem/queasy-webapp/)
+
 [Application template](https://github.com/v-dem/queasy-webapp-template/)
