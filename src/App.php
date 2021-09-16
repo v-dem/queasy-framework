@@ -51,6 +51,11 @@ class App
         }
     }
 
+    protected function page404()
+    {
+        http_response_code(404);
+    }
+
     protected function init()
     {
     }

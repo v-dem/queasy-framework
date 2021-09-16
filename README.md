@@ -7,3 +7,14 @@
 # [QuEasy PHP Framework](https://github.com/v-dem/queasy-framework/) - Main
 
 ## Package `v-dem/queasy-framework`
+
+QuEasy PHP Framework main classes.
+
+### Requirements
+
+*   PHP version 5.3 or higher
+
+### References
+
+[Sample application](https://github.com/v-dem/queasy-webapp/)
+[Application template](https://github.com/v-dem/queasy-webapp-template/)
