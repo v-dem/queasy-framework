@@ -27,3 +27,15 @@ QuEasy PHP Framework main classes.
 *   [PSR-7 HTTP (`v-dem/queasy-http`)](https://github.com/v-dem/queasy-http/)
 
 > *These packages are not required for the framework to function. You can easily use other packages you like.*
+
+### Classes
+
+#### `App`
+
+Application's main class. Usually is a base class for web application's App classes.
+
+#### `Controller`
+
+#### `RegexRouter`
+
+#### `container/ServiceContainer`
