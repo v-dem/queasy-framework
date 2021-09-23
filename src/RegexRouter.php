@@ -28,7 +28,7 @@ class RegexRouter implements RouteInterface
 
     private function routeLookup($routes, $path)
     {
-        foreach ($this->routes as $route => $handler) {
+        foreach ($routes as $route => $handler) {
             if (preg_match($route, $path, $matches)) {
                 if (is_array($handler)) {
                     return $this->routeLookup($handler, $path);
