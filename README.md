@@ -18,3 +18,12 @@ QuEasy PHP Framework main classes.
 
 *   [Sample application](https://github.com/v-dem/queasy-webapp/)
 *   [Application template](https://github.com/v-dem/queasy-webapp-template/)
+
+### Packages
+
+*   [Config (v-dem/queasy-config)](https://github.com/v-dem/queasy-config/)
+*   [PSR-3 Logger (v-dem/queasy-log)](https://github.com/v-dem/queasy-log/)
+*   [Database (v-dem/queasy-db)](https://github.com/v-dem/queasy-db/)
+*   [PSR-7 HTTP (v-dem/queasy-http)](https://github.com/v-dem/queasy-http/)
+
+* These packages are not required for the framework to function. You can easily use other packages you like.
