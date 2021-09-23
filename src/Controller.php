@@ -38,6 +38,7 @@ class Controller
             : $__page);
 
         $__body = ob_get_contents();
+
         ob_end_clean();
 
         return $this->app->response->withBody(new Stream($__body))->withStatus($__responseCode);
