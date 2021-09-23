@@ -54,6 +54,8 @@ class App
     protected function page404()
     {
         http_response_code(404);
+
+        echo 'The requested URL was not found on this server.';
     }
 
     protected function init()
