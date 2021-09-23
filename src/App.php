@@ -5,6 +5,7 @@ namespace queasy\framework;
 use Psr\Http\Message\ServerRequestInterface;
 
 use queasy\framework\container\ServiceContainerInterface;
+use queasy\http\Stream;
 
 class App
 {
@@ -53,9 +54,9 @@ class App
 
     protected function page404()
     {
-        http_response_code(404);
-
-        echo 'The requested URL was not found on this server.';
+        return $this->response
+            ->withBody(new Stream('The requested URL was not found on this server.'))
+            ->withStatusCode(404);
     }
 
     protected function init()
