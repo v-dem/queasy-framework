@@ -22,7 +22,7 @@ class ServiceContainerTest extends TestCase
 
         $this->expectException(ContainerException::class);
 
-        $service = $container->get('app');
+        $container->get('app');
     }
 
     public function testService()
