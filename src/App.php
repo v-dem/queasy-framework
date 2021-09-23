@@ -56,7 +56,7 @@ class App
     {
         return $this->response
             ->withBody(new Stream('The requested URL was not found on this server.'))
-            ->withStatusCode(404);
+            ->withStatus(404);
     }
 
     protected function init()
