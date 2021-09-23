@@ -43,9 +43,9 @@ class App
                 $method = strtolower($request->getMethod());
 
                 return call_user_func_array(array($controller, $method), $arguments);
-            } else {
-                throw new InvalidArgumentException(sprintf('Invalid handler type "%s".', gettype($handler)));
             }
+
+            throw new InvalidArgumentException(sprintf('Invalid handler type "%s".', gettype($handler)));
         } catch (RouteNotFoundException $e) {
             return $this->page404($request);
         }
