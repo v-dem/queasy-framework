@@ -24,6 +24,7 @@
         "v-dem/queasy-helper": "dev-master",
         "v-dem/queasy-config": "dev-master",
         "v-dem/queasy-log": "dev-master",
+        "v-dem/queasy-http": "dev-master",
         "v-dem/queasy-db": "dev-master",
         "ext-xdebug": "^2.6.0"
     },

@@ -33,22 +33,23 @@ class App
     public function run()
     {
         try {
-            $request = $this->serviceContainer->get('request');
-            $routeEntry = $this->router->route($request);
+            $this->logger->debug('Request path: ' . $request->getPath());
+
+            $routeEntry = $this->router->route($this->request);
             $handler = $routeEntry->getHandler();
             $arguments = $routeEntry->getArguments();
             if (is_callable($handler)) {
                 return call_user_func_array($handler, $arguments);
             } elseif (is_string($handler)) {
                 $controller = new $handler($this);
-                $method = strtolower($request->getMethod());
+                $method = strtolower($this->request->getMethod());
 
                 return call_user_func_array(array($controller, $method), $arguments);
             }
 
             throw new InvalidArgumentException(sprintf('Invalid handler type "%s".', gettype($handler)));
         } catch (RouteNotFoundException $e) {
-            return $this->page404($request);
+            return $this->page404($this->request);
         }
     }
 
