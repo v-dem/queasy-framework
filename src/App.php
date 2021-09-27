@@ -33,7 +33,7 @@ class App
     public function run()
     {
         try {
-            $this->logger->debug('Request path: ' . $request->getPath());
+            $this->logger->debug('Request path: ' . $this->request->getPath());
 
             $routeEntry = $this->router->route($this->request);
             $handler = $routeEntry->getHandler();
