@@ -78,11 +78,9 @@ class ServiceContainer implements ServiceContainerInterface
                 if ('value' === $argType) {
                     $result[] = $argValue;
                 } elseif ('service' === $argType) {
-                    if ('this' === $argValue) {
-                        $result[] = $this;
-                    } else {
-                        $result[] = $this->$argValue;
-                    }
+                    $result[] = ('this' === $argValue)
+                        ? $this
+                        : $this->$argValue;
                 } else {
                     throw new ContainerException(sprintf('Unknown argument type "%s".', $argType));
                 }
