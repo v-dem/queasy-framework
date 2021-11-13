@@ -2,6 +2,8 @@
 
 namespace queasy\framework;
 
+use InvalidArgumentException;
+
 use Psr\Http\Message\ServerRequestInterface;
 
 use queasy\framework\container\ServiceContainerInterface;
