@@ -43,13 +43,11 @@ class App
             $hasOutput = false;
             if (is_callable($handler)) {
                 $output = call_user_func_array($handler, $arguments);
-                $hasOutput = true;
             } elseif (is_string($handler)) {
                 $controller = new $handler($this);
                 $method = strtolower($this->request->getMethod());
 
                 $output = call_user_func_array(array($controller, $method), $arguments);
-                $hasOutput = true;
             } else {
                 throw new InvalidArgumentException(sprintf('Invalid handler type "%s".', gettype($handler)));
             }
