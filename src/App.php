@@ -40,22 +40,23 @@ class App
             $routeEntry = $this->router->route($this->request);
             $handler = $routeEntry->getHandler();
             $arguments = $routeEntry->getArguments();
+            $hasOutput = false;
             if (is_callable($handler)) {
                 $output = call_user_func_array($handler, $arguments);
+                $hasOutput = true;
             } elseif (is_string($handler)) {
                 $controller = new $handler($this);
                 $method = strtolower($this->request->getMethod());
 
                 $output = call_user_func_array(array($controller, $method), $arguments);
+                $hasOutput = true;
+            } else {
+                throw new InvalidArgumentException(sprintf('Invalid handler type "%s".', gettype($handler)));
             }
 
-            if (isset($output)) {
-                return (!is_string($output) && $this->request->isAjax())
-                    ? json_encode($output)
-                    : $output;
-            }
-
-            throw new InvalidArgumentException(sprintf('Invalid handler type "%s".', gettype($handler)));
+            return (!is_string($output) && $this->request->isAjax())
+                ? json_encode($output)
+                : $output;
         } catch (RouteNotFoundException $e) {
             return $this->page404($this->request);
         }
