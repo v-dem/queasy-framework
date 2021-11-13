@@ -39,12 +39,18 @@ class App
             $handler = $routeEntry->getHandler();
             $arguments = $routeEntry->getArguments();
             if (is_callable($handler)) {
-                return call_user_func_array($handler, $arguments);
+                $output = call_user_func_array($handler, $arguments);
             } elseif (is_string($handler)) {
                 $controller = new $handler($this);
                 $method = strtolower($this->request->getMethod());
 
-                return call_user_func_array(array($controller, $method), $arguments);
+                $output = call_user_func_array(array($controller, $method), $arguments);
+            }
+
+            if (isset($output)) {
+                return (!is_string($output) && Controller::isAjax())
+                    ? json_encode($output)
+                    : $output;
             }
 
             throw new InvalidArgumentException(sprintf('Invalid handler type "%s".', gettype($handler)));
