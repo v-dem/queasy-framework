@@ -48,7 +48,7 @@ class App
             }
 
             if (isset($output)) {
-                return (!is_string($output) && Controller::isAjax())
+                return (!is_string($output) && $this->request->isAjax())
                     ? json_encode($output)
                     : $output;
             }
