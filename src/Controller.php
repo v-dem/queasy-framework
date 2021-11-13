@@ -8,12 +8,6 @@ use queasy\http\Stream;
 
 class Controller
 {
-    protected static function isAjax()
-    {
-        return !empty(filter_input(INPUT_SERVER, 'HTTP_X_REQUESTED_WITH'))
-            && ('xmlhttprequest' === strtolower(filter_input(INPUT_SERVER, 'HTTP_X_REQUESTED_WITH')));
-    }
-
     protected $app;
 
     protected $get;
