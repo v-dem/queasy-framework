@@ -2,7 +2,7 @@
 
 namespace queasy\framework\container;
 
-class NotFoundException extends ContainerException
+class NotFoundException extends ContainerException implements NotFoundExceptionInterface
 {
 }
 

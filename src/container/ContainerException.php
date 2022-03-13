@@ -4,7 +4,7 @@ namespace queasy\framework\container;
 
 use Exception;
 
-class ContainerException extends Exception
+class ContainerException extends Exception implements ContainerExceptionInterface
 {
 }
 
