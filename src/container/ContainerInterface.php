@@ -2,7 +2,7 @@
 
 namespace queasy\framework\container;
 
-interface ServiceContainerInterface
+interface ContainerInterface
 {
     public function has($service);
 

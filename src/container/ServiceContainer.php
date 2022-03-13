@@ -4,7 +4,7 @@ namespace queasy\framework\container;
 
 use Psr\Log\NullLogger;
 
-class ServiceContainer implements ServiceContainerInterface
+class ServiceContainer implements ContainerInterface
 {
     protected $config;
 
