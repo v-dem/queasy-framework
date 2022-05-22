@@ -1,6 +1,6 @@
 <?php
 
-namespace queasy\framework\container;
+namespace queasy\framework;
 
 use Exception;
 

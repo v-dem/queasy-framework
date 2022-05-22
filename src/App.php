@@ -5,31 +5,26 @@ namespace queasy\framework;
 use InvalidArgumentException;
 
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\NullLogger;
 
-use queasy\framework\container\ServiceContainerInterface;
 use queasy\http\Stream;
 
 class App
 {
     protected $config;
 
-    protected $serviceContainer;
+    protected $services;
 
-    public function __construct($config, ServiceContainerInterface $serviceContainer)
+    public function __construct($config)
     {
         $this->config = $config;
-        $this->serviceContainer = $serviceContainer;
+        $this->services = array();
 
-        $this->init();
-    }
-
-    public function __get($service)
-    {
-        if ('config' === $service) {
-            return $this->config;
+        if (!isset($this->config['logger'])) {
+            $this->services['logger'] = new NullLogger();
         }
 
-        return $this->serviceContainer->get($service);
+        $this->init();
     }
 
     public function run()
@@ -60,6 +55,81 @@ class App
         }
     }
 
+    public function __isset($serviceId)
+    {
+        return $this->has($serviceId);
+    }
+
+    public function __get($serviceId)
+    {
+        if ('config' === $serviceId) {
+            return $this->config;
+        }
+
+        return $this->get($serviceId);
+    }
+
+    /**
+     * Returns true if the container can return a service for the given identifier.
+     * Returns false otherwise.
+     *
+     * `has($serviceId)` returning true does not mean that `get($serviceId)` will not throw an exception.
+     * It does however mean that `get($serviceId)` will not throw a `NotFoundExceptionInterface`.
+     *
+     * @param string $serviceId Identifier of the entry to look for.
+     *
+     * @return bool
+     */
+    public function has($serviceId)
+    {
+        return isset($this->config[$serviceId]);
+    }
+
+    /**
+     * Finds a service of the container by its identifier and returns it.
+     *
+     * @param string $serviceId Identifier of the service to look for.
+     *
+     * @throws NotFoundExceptionInterface  No service was found for **this** identifier.
+     * @throws ContainerExceptionInterface Error while retrieving the service.
+     *
+     * @return mixed Entry.
+     */
+    public function get($serviceId)
+    {
+        if (isset($this->services[$serviceId])) {
+            return $this->services[$serviceId];
+        } elseif (isset($this->config[$serviceId])) {
+            $serviceConfig = $this->config[$serviceId];
+            $serviceClass = $serviceConfig['class'];
+            if (isset($serviceConfig['construct'])) {
+                $args = $this->parseArgs($serviceConfig['construct']);
+                if (version_compare(PHP_VERSION, '5.6.0', '>=')) {
+                    $serviceInstance = new $serviceClass(...$args);
+                } else {
+                    $reflect = new ReflectionClass($serviceClass);
+                    $serviceInstance = $reflect->newInstanceArgs($args);
+                }
+            } else {
+                $serviceInstance = new $serviceClass();
+            }
+
+            foreach ($serviceConfig as $method => $args) {
+                if (('class' === $method) || ('construct' === $method)) {
+                    continue;
+                }
+
+                call_user_func_array(array($serviceInstance, $method), $this->parseArgs($args));
+            }
+
+            $this->services[$serviceId] = $serviceInstance;
+
+            return $serviceInstance;
+        } else {
+            throw new NotFoundException(sprintf('Service "%s" is not configured.', $serviceId));
+        }
+    }
+
     protected function page404()
     {
         return $this->response
@@ -69,6 +139,26 @@ class App
 
     protected function init()
     {
+    }
+
+    private function parseArgs($args)
+    {
+        $result = [];
+        foreach ($args as $arg) {
+            foreach ($arg as $argType => $argValue) {
+                if ('value' === $argType) {
+                    $result[] = $argValue;
+                } elseif ('service' === $argType) {
+                    $result[] = ('this' === $argValue)
+                        ? $this
+                        : $this->$argValue;
+                } else {
+                    throw new ContainerException(sprintf('Unknown argument type "%s".', $argType));
+                }
+            }
+        }
+
+        return $result;
     }
 }
 

@@ -1,34 +1,34 @@
 <?php
 
-namespace queasy\framework\container\tests;
+namespace queasy\framework\tests;
 
 use PHPUnit\Framework\TestCase;
 
-use queasy\framework\container\ServiceContainer;
-use queasy\framework\container\ContainerException;
+use queasy\framework\App;
+use queasy\framework\ContainerException;
 
 class ServiceContainerTest extends TestCase
 {
     public function testNoService()
     {
-        $container = new ServiceContainer([]);
+        $container = new App([]);
 
-        $this->assertFalse($container->has('app'));
+        $this->assertFalse($container->has('db'));
     }
 
     public function testNoServiceException()
     {
-        $container = new ServiceContainer([]);
+        $container = new App([]);
 
         $this->expectException(ContainerException::class);
 
-        $container->get('app');
+        $container->get('db');
     }
 
     public function testService()
     {
-        $container = new ServiceContainer([
-            'app' => [
+        $container = new App([
+            'db' => [
                 'class' => TestService::class,
                 'construct' => [
                     [
@@ -40,14 +40,14 @@ class ServiceContainerTest extends TestCase
             ]
         ]);
 
-        $this->assertTrue($container->has('app'));
+        $this->assertTrue($container->has('db'));
 
-        $app = $container->get('app');
+        $db = $container->get('db');
 
-        $this->assertSame($app, $container->app);
+        $this->assertSame($db, $container->db);
 
-        $this->assertEquals(123, $app->getValue());
-        $this->assertSame($container, $app->getContainer());
+        $this->assertEquals(123, $db->getValue());
+        $this->assertSame($container, $db->getContainer());
     }
 }
 
