@@ -9,7 +9,7 @@ use Psr\Log\NullLogger;
 
 use queasy\http\Stream;
 
-class App
+class App implements ContainerInterface
 {
     protected $config;
 

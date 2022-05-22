@@ -33,10 +33,10 @@ class Controller
 
         ob_start();
 
-        print_r($this->app->config);
+        $config = $this->app->config;
 
-        require isset($this->app->config['viewsPath'])
-            ? $this->app->config['viewsPath'] . $__page
+        require isset($config['viewsPath'])
+            ? $config['viewsPath'] . $__page
             : $__page;
 
         $__body = ob_get_contents();
