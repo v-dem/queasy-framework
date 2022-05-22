@@ -33,6 +33,8 @@ class Controller
 
         ob_start();
 
+        print_r($this->app->config);
+
         require isset($this->app->config['viewsPath'])
             ? $this->app->config['viewsPath'] . $__page
             : $__page;
