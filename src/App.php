@@ -37,12 +37,35 @@ class App implements ContainerInterface
             $arguments = $routeEntry->getArguments();
             $hasOutput = false;
             if (is_callable($handler)) {
-                $output = call_user_func_array($handler, $arguments);
+                switch (count($arguments)) { // Attempt to increase performance
+                    case 0:
+                        $output = $handler();
+                        break;
+                    case 1:
+                        $output = $handler($arguments[0]);
+                        break;
+                    case 2:
+                        $output = $handler($arguments[0], $arguments[1]);
+                        break;
+                    default:
+                        $output = call_user_func_array($handler, $arguments);
+                }
             } elseif (is_string($handler)) {
                 $controller = new $handler($this);
                 $method = strtolower($this->request->getMethod());
-
-                $output = call_user_func_array(array($controller, $method), $arguments);
+                switch (count($arguments)) { // Attempt to increase performance
+                    case 0:
+                        $output = $controller->$method();
+                        break;
+                    case 1:
+                        $output = $controller->$method($arguments[0]);
+                        break;
+                    case 2:
+                        $output = $controller->$method($arguments[0], $arguments[1]);
+                        break;
+                    default:
+                        $output = call_user_func_array(array($controller, $method), $arguments);
+                }
             } else {
                 throw new InvalidArgumentException(sprintf('Invalid handler type "%s".', gettype($handler)));
             }
