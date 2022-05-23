@@ -9,6 +9,7 @@ use Psr\Log\NullLogger;
 use Psr\Log\LoggerAwareInterface;
 
 use queasy\http\Stream;
+use queasy\helper\System;
 
 class App implements ContainerInterface
 {
@@ -37,11 +38,11 @@ class App implements ContainerInterface
             $handler = $route->getHandler();
             $arguments = $route->getArguments();
             if (is_callable($handler)) {
-                $output = $this->callUserFuncArray($handler, $arguments);
+                $output = System::callUserFuncArray($handler, $arguments);
             } elseif (is_string($handler)) {
                 $controller = new $handler($this);
                 $method = strtolower($this->request->getMethod());
-                $output = $this->callUserFuncArray(array($controller, $method), $arguments);
+                $output = System::callUserFuncArray(array($controller, $method), $arguments);
             } else {
                 throw new InvalidArgumentException(sprintf('Invalid handler type "%s".', gettype($handler)));
             }
@@ -133,7 +134,7 @@ class App implements ContainerInterface
                     continue;
                 }
 
-                $this->callUserFuncArray(array($serviceInstance, $method), $this->parseArgs($args));
+                System::callUserFuncArray(array($serviceInstance, $method), $this->parseArgs($args));
             }
 
             $this->services[$serviceId] = $serviceInstance;
@@ -173,24 +174,6 @@ class App implements ContainerInterface
         }
 
         return $result;
-    }
-
-    private function callUserFuncArray($handler, array $args = array())
-    {
-        // TODO: Move this function to queasy-helper?
-
-        switch (count($args)) {
-            case 0:
-                return $handler();
-
-            case 1:
-                return $handler($args[0]);
-
-            case 2:
-                return $handler($args[0], $args[1]);
-        }
-
-        return call_user_func_array($handler, $args);
     }
 }
 
