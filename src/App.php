@@ -6,6 +6,7 @@ use InvalidArgumentException;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\NullLogger;
+use Psr\Log\LoggerAwareInterface;
 
 use queasy\http\Stream;
 
@@ -117,6 +118,12 @@ class App implements ContainerInterface
                 // Using default constructor
 
                 $serviceInstance = new $serviceClass();
+            }
+
+            // Set default logger if custom logger not configured
+
+            if (!isset($serviceConfig['setLogger']) && ($serviceInstance instanceof LoggerAwareInterface)) {
+                $serviceInstance->setLogger($this->logger);
             }
 
             // Call service initialization methods
