@@ -32,10 +32,9 @@ class App implements ContainerInterface
         try {
             $this->logger->debug('Request path: ' . $this->request->getUri()->getPath());
 
-            $routeEntry = $this->router->route($this->request);
-            $handler = $routeEntry->getHandler();
-            $arguments = $routeEntry->getArguments();
-            $hasOutput = false;
+            $route = $this->router->route($this->request);
+            $handler = $route->getHandler();
+            $arguments = $route->getArguments();
             if (is_callable($handler)) {
                 $output = $this->callUserFuncArray($handler, $arguments);
             } elseif (is_string($handler)) {
@@ -101,7 +100,12 @@ class App implements ContainerInterface
         } elseif (isset($this->config[$serviceId])) {
             $serviceConfig = $this->config[$serviceId];
             $serviceClass = $serviceConfig['class'];
+
+            // Instantiate service
+
             if (isset($serviceConfig['construct'])) {
+                // Using declared constructor
+
                 $args = $this->parseArgs($serviceConfig['construct']);
                 if (version_compare(PHP_VERSION, '5.6.0', '>=')) {
                     $serviceInstance = new $serviceClass(...$args);
@@ -110,8 +114,12 @@ class App implements ContainerInterface
                     $serviceInstance = $reflect->newInstanceArgs($args);
                 }
             } else {
+                // Using default constructor
+
                 $serviceInstance = new $serviceClass();
             }
+
+            // Call service initialization methods
 
             foreach ($serviceConfig as $method => $args) {
                 if (('class' === $method) || ('construct' === $method)) {
