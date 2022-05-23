@@ -37,35 +37,11 @@ class App implements ContainerInterface
             $arguments = $routeEntry->getArguments();
             $hasOutput = false;
             if (is_callable($handler)) {
-                switch (count($arguments)) { // Attempt to increase performance
-                    case 0:
-                        $output = $handler();
-                        break;
-                    case 1:
-                        $output = $handler($arguments[0]);
-                        break;
-                    case 2:
-                        $output = $handler($arguments[0], $arguments[1]);
-                        break;
-                    default:
-                        $output = call_user_func_array($handler, $arguments);
-                }
+                $output = $this->callUserFuncArray($handler, $arguments);
             } elseif (is_string($handler)) {
                 $controller = new $handler($this);
                 $method = strtolower($this->request->getMethod());
-                switch (count($arguments)) { // Attempt to increase performance
-                    case 0:
-                        $output = $controller->$method();
-                        break;
-                    case 1:
-                        $output = $controller->$method($arguments[0]);
-                        break;
-                    case 2:
-                        $output = $controller->$method($arguments[0], $arguments[1]);
-                        break;
-                    default:
-                        $output = call_user_func_array(array($controller, $method), $arguments);
-                }
+                $output = $this->callUserFuncArray(array($controller, $method), $arguments);
             } else {
                 throw new InvalidArgumentException(sprintf('Invalid handler type "%s".', gettype($handler)));
             }
@@ -142,7 +118,7 @@ class App implements ContainerInterface
                     continue;
                 }
 
-                call_user_func_array(array($serviceInstance, $method), $this->parseArgs($args));
+                $this->callUserFuncArray(array($serviceInstance, $method), $this->parseArgs($args));
             }
 
             $this->services[$serviceId] = $serviceInstance;
@@ -182,6 +158,24 @@ class App implements ContainerInterface
         }
 
         return $result;
+    }
+
+    private function callUserFuncArray($handler, array $args = array())
+    {
+        // TODO: Move this function to queasy-helper?
+
+        switch (count($args)) {
+            case 0:
+                return $handler();
+
+            case 1:
+                return $handler($args[0]);
+
+            case 2:
+                return $handler($args[0], $args[1]);
+        }
+
+        return call_user_func_array($handler, $args);
     }
 }
 
