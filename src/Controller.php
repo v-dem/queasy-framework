@@ -2,8 +2,6 @@
 
 namespace queasy\framework;
 
-use Psr\Http\Message\ServerRequestInterface;
-
 use queasy\http\Stream;
 
 class Controller

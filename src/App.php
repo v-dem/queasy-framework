@@ -99,50 +99,52 @@ class App implements ContainerInterface
     {
         if (isset($this->services[$serviceId])) {
             return $this->services[$serviceId];
-        } elseif (isset($this->config[$serviceId])) {
-            $serviceConfig = $this->config[$serviceId];
-            $serviceClass = $serviceConfig['class'];
+        }
 
-            // Instantiate service
-
-            if (isset($serviceConfig['construct'])) {
-                // Using declared constructor
-
-                $args = $this->parseArgs($serviceConfig['construct']);
-                if (version_compare(PHP_VERSION, '5.6.0', '>=')) {
-                    $serviceInstance = new $serviceClass(...$args);
-                } else {
-                    $reflect = new ReflectionClass($serviceClass);
-                    $serviceInstance = $reflect->newInstanceArgs($args);
-                }
-            } else {
-                // Using default constructor
-
-                $serviceInstance = new $serviceClass();
-            }
-
-            // Set default logger if custom logger not configured
-
-            if (!isset($serviceConfig['setLogger']) && ($serviceInstance instanceof LoggerAwareInterface)) {
-                $serviceInstance->setLogger($this->logger);
-            }
-
-            // Call service initialization methods
-
-            foreach ($serviceConfig as $method => $args) {
-                if (('class' === $method) || ('construct' === $method)) {
-                    continue;
-                }
-
-                System::callUserFuncArray(array($serviceInstance, $method), $this->parseArgs($args));
-            }
-
-            $this->services[$serviceId] = $serviceInstance;
-
-            return $serviceInstance;
-        } else {
+        if (!isset($this->config[$serviceId])) {
             throw new NotFoundException(sprintf('Service "%s" is not configured.', $serviceId));
         }
+
+        $serviceConfig = $this->config[$serviceId];
+        $serviceClass = $serviceConfig['class'];
+
+        // Instantiate service
+
+        if (isset($serviceConfig['construct'])) {
+            // Using declared constructor
+
+            $args = $this->parseArgs($serviceConfig['construct']);
+            if (version_compare(PHP_VERSION, '5.6.0', '>=')) {
+                $serviceInstance = new $serviceClass(...$args);
+            } else {
+                $reflect = new ReflectionClass($serviceClass);
+                $serviceInstance = $reflect->newInstanceArgs($args);
+            }
+        } else {
+            // Using default constructor
+
+            $serviceInstance = new $serviceClass();
+        }
+
+        // Set default logger if custom logger not configured
+
+        if (!isset($serviceConfig['setLogger']) && ($serviceInstance instanceof LoggerAwareInterface)) {
+            $serviceInstance->setLogger($this->logger);
+        }
+
+        // Call service initialization methods
+
+        foreach ($serviceConfig as $method => $args) {
+            if (('class' === $method) || ('construct' === $method)) {
+                continue;
+            }
+
+            System::callUserFuncArray(array($serviceInstance, $method), $this->parseArgs($args));
+        }
+
+        $this->services[$serviceId] = $serviceInstance;
+
+        return $serviceInstance;
     }
 
     protected function page404()
