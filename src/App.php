@@ -37,15 +37,18 @@ class App implements ContainerInterface
             $route = $this->router->route($this->request);
             $handler = $route->getHandler();
             $arguments = $route->getArguments();
-            if (is_callable($handler)) {
-                $output = System::callUserFuncArray($handler, $arguments);
-            } elseif (is_string($handler)) {
-                $controller = new $handler($this);
-                $method = strtolower($this->request->getMethod());
-                $output = System::callUserFuncArray(array($controller, $method), $arguments);
-            } else {
+
+            if (!is_callable($handler) && !is_string($handler)) {
                 throw new InvalidArgumentException(sprintf('Invalid handler type "%s".', gettype($handler)));
             }
+
+            if (is_string($handler)) {
+                $controller = new $handler($this);
+                $method = strtolower($this->request->getMethod());
+                $handler = array($controller, $method);
+            }
+
+            $output = System::callUserFuncArray($handler, $arguments);
 
             return (!is_string($output) && $this->request->isAjax())
                 ? json_encode($output)
