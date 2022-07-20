@@ -57,9 +57,11 @@ class App implements ContainerInterface
                 $handler = array($controller, $method);
             }
 
-            
+            $closure = function() use($handler, $arguments) {
+                return System::callUserFuncArray($handler, $arguments);
+            };
 
-            $output = System::callUserFuncArray($handler, $arguments);
+            $output = $closure();
 
             return (!is_string($output) && method_exists($this->request, 'isAjax') && $this->request->isAjax())
                 ? json_encode($output)
