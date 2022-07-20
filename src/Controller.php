@@ -18,11 +18,11 @@ class Controller
     {
         $this->app = $app;
 
-        $this->get = filter_input_array(INPUT_GET);
+        $this->get = $app->request->getQueryParams();
 
-        $this->post = filter_input_array(INPUT_POST);
+        $this->post = $app->request->getParsedBody();
 
-        $this->files = $_FILES;
+        $this->files = $app->request->getUploadedFiles();
     }
 
     protected function view($__page, array $__data = array(), $__responseCode = 200)

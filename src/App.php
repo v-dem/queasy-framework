@@ -8,7 +8,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\NullLogger;
 use Psr\Log\LoggerAwareInterface;
 
-use queasy\http\Stream;
 use queasy\helper\System;
 
 class App implements ContainerInterface
@@ -34,6 +33,18 @@ class App implements ContainerInterface
         try {
             $this->logger->debug('Request path: ' . $this->request->getUri()->getPath());
 
+            if (!$this->has('request')) {
+                throw new Exception('No "request" service configured.');
+            }
+
+            if (!$this->has('response')) {
+                throw new Exception('No "response" service configured.');
+            }
+
+            if (!$this->has('stream')) {
+                throw new Exception('No "stream" service configured.');
+            }
+
             $route = $this->router->route($this->request);
             $handler = $route->getHandler();
             $arguments = $route->getArguments();
@@ -55,6 +66,10 @@ class App implements ContainerInterface
                 : $output;
         } catch (RouteNotFoundException $e) {
             return $this->page404($this->request);
+        } catch (Exception $e) {
+            $this->logger->fatal($e->getMessage());
+
+            return $this->page500($this->request);
         }
     }
 
@@ -152,9 +167,20 @@ class App implements ContainerInterface
 
     protected function page404()
     {
+        $this->stream->write('The requested URL was not found on this server.');
+
         return $this->response
-            ->withBody(new Stream('The requested URL was not found on this server.'))
+            ->withBody($this->stream)
             ->withStatus(404);
+    }
+
+    protected function page500()
+    {
+        $this->stream->write('Internal error.');
+
+        return $this->response
+            ->withBody($this->stream)
+            ->withStatus(500);
     }
 
     protected function init()
