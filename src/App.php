@@ -61,13 +61,13 @@ class App implements ContainerInterface
 
             $output = System::callUserFuncArray($handler, $arguments);
 
-            return (!is_string($output) && $this->request->isAjax())
+            return (!is_string($output) && method_exists($this->request, 'isAjax') && $this->request->isAjax())
                 ? json_encode($output)
                 : $output;
         } catch (RouteNotFoundException $e) {
             return $this->page404($this->request);
         } catch (Exception $e) {
-            $this->logger->fatal($e->getMessage());
+            $this->logger->error($e->getMessage());
 
             return $this->page500($this->request);
         }
