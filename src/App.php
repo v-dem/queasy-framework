@@ -24,8 +24,6 @@ class App implements ContainerInterface
         if (!isset($this->config['logger'])) {
             $this->services['logger'] = new NullLogger();
         }
-
-        $this->init();
     }
 
     public function run()
@@ -58,6 +56,8 @@ class App implements ContainerInterface
                 $method = strtolower($this->request->getMethod());
                 $handler = array($controller, $method);
             }
+
+            
 
             $output = System::callUserFuncArray($handler, $arguments);
 
@@ -181,10 +181,6 @@ class App implements ContainerInterface
         return $this->response
             ->withBody($this->stream)
             ->withStatus(500);
-    }
-
-    protected function init()
-    {
     }
 
     private function parseArgs($args)
