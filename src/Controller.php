@@ -41,8 +41,10 @@ class Controller
 
         ob_end_clean();
 
+        $this->app->stream->write($__body);
+
         return $this->app->response
-            ->withBody(new Stream($__body))
+            ->withBody($this->app->stream)
             ->withStatus($__responseCode);
     }
 }

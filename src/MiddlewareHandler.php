@@ -2,6 +2,8 @@
 
 namespace queasy\framework;
 
+use Closure;
+
 use Psr\Http\Message\ServerRequestInterface;
 
 use Psr\Log\LoggerAwareInterface;
@@ -25,7 +27,7 @@ class MiddlewareHandler implements LoggerAwareInterface
         $this->logger = new NullLogger();
     }
 
-    public function handle(ServerRequestInterface $request, $controller)
+    public function handle(ServerRequestInterface $request, Closure $controllerClosure)
     {
         
     }
