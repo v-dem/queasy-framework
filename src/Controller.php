@@ -47,5 +47,17 @@ class Controller
             ->withBody($this->app->stream)
             ->withStatus($__responseCode);
     }
+
+    protected function json($data, $jsonFlags, $responseCode = 200)
+    {
+        $json = json_encode($data, $jsonFlags);
+
+        $this->app->stream->write($json);
+
+        return $this->app->response
+            ->withHeader('Content-Type', 'application/json')
+            ->withBody($this->app->stream)
+            ->withStatus($responseCode);
+    }
 }
 
