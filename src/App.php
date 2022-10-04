@@ -61,7 +61,7 @@ class App implements ContainerInterface
                 return System::callUserFuncArray($handler, $arguments);
             };
 
-            $output = isset($this->middleware) && // TODO:
+            $output = isset($this->middleware) // TODO: There was "&&" for some reason
                 ? $this->middleware->handle($handler, $this->request, $closure)
                 : $closure();
 
