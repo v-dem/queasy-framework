@@ -48,7 +48,7 @@ class Controller
             ->withStatus($__responseCode);
     }
 
-    protected function json($data, $jsonFlags, $responseCode = 200)
+    protected function json($data, $jsonFlags = 0, $responseCode = 200)
     {
         $json = json_encode($data, $jsonFlags);
 
