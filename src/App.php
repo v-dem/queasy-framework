@@ -192,14 +192,19 @@ class App implements ContainerInterface
         $result = [];
         foreach ($args as $arg) {
             foreach ($arg as $argType => $argValue) {
-                if ('value' === $argType) {
-                    $result[] = $argValue;
-                } elseif ('service' === $argType) {
-                    $result[] = ('this' === $argValue)
-                        ? $this
-                        : $this->$argValue;
-                } else {
-                    throw new ContainerException(sprintf('Unknown argument type "%s".', $argType));
+                switch ($argType) {
+                    case 'value':
+                        $result[] = $argValue;
+                        break;
+
+                    case 'service':
+                        $result[] = ('this' === $argValue)
+                            ? $this
+                            : $this->$argValue;
+                        break;
+
+                    default:
+                        throw new ContainerException(sprintf('Unknown argument type "%s".', $argType));
                 }
             }
         }

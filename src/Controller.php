@@ -37,9 +37,7 @@ class Controller
             ? $__config['viewsPath'] . $__page
             : $__page;
 
-        $__body = ob_get_contents();
-
-        ob_end_clean();
+        $__body = ob_get_clean();
 
         $this->app->stream->write($__body);
 

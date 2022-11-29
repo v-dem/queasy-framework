@@ -10,7 +10,7 @@ use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
-class MiddlewareHandler implements LoggerAwareInterface
+class MiddlewareHandler implements MiddlewareInterface, LoggerAwareInterface
 {
     private $config;
 
