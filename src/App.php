@@ -61,8 +61,8 @@ class App implements ContainerInterface
                 return System::callUserFuncArray($handler, $arguments);
             };
 
-            $output = isset($this->middleware) // TODO: There was "&&" for some reason
-                ? $this->middleware->handle($handler, $this->request, $closure)
+            $output = isset($this->middleware)
+                ? $this->middleware->handle($this->request, $closure)
                 : $closure();
 
             return (!is_string($output) && method_exists($this->request, 'isAjax') && $this->request->isAjax())
