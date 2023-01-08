@@ -4,6 +4,9 @@ namespace queasy\framework;
 
 use queasy\http\Stream;
 
+use ReflectionClass;
+use ReflectionMethod;
+
 class Controller
 {
     protected $app;
@@ -23,6 +26,25 @@ class Controller
         $this->post = $app->request->getParsedBody();
 
         $this->files = $app->request->getUploadedFiles();
+    }
+
+    public function options()
+    {
+        $class = new ReflectionClass($this);
+        $methods = $class->getMethods(ReflectionMethod::IS_PUBLIC);
+        $httpMethodsArray = array();
+        foreach ($methods as $method) {
+            if ($method->isAbstract() || $method->isStatic() || $method->isConstructor() || $method->isDestructor()) {
+                continue;
+            }
+
+            $httpMethodsArray[] = strtoupper($method->getName());
+        }
+
+        return $this->app->response
+            ->withHeader('Allow', implode(', ', $httpMethodsArray))
+            ->withBody($this->app->stream)
+            ->withStatus(204);
     }
 
     protected function view($__page, array $__data = array(), $__responseCode = 200)
