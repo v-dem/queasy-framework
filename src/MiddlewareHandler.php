@@ -29,7 +29,7 @@ class MiddlewareHandler implements MiddlewareInterface, LoggerAwareInterface
 
     public function handle(ServerRequestInterface $request, Closure $controllerClosure)
     {
-        
+        return $controllerClosure();
     }
 
     public function setLogger(LoggerInterface $logger)
