@@ -47,7 +47,7 @@ class Controller
             ->withStatus(204);
     }
 
-    protected function view($__page, array $__data = array(), $__responseCode = 200)
+    protected function preview($__page, array $__data = array())
     {
         extract($__data);
 
@@ -59,13 +59,18 @@ class Controller
             ? $__config['viewsPath'] . $__page
             : $__page;
 
-        $__body = ob_get_clean();
+        return ob_get_clean();
+    }
 
-        $this->app->stream->write($__body);
+    protected function view($page, array $data = array(), $responseCode = 200)
+    {
+        $body = $this->preview($page, $data);
+
+        $this->app->stream->write($body);
 
         return $this->app->response
             ->withBody($this->app->stream)
-            ->withStatus($__responseCode);
+            ->withStatus($responseCode);
     }
 
     protected function json($data, $jsonFlags = 0, $responseCode = 200)
