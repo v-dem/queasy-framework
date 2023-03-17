@@ -2,6 +2,7 @@
 
 namespace queasy\framework;
 
+use Exception;
 use InvalidArgumentException;
 
 use Psr\Http\Message\ServerRequestInterface;
