@@ -66,9 +66,7 @@ class App implements ContainerInterface
                 ? $this->middleware->handle($this->request, $closure)
                 : $closure();
 
-            return (!is_string($output) && method_exists($this->request, 'isAjax') && $this->request->isAjax())
-                ? json_encode($output)
-                : $output;
+            return $output;
         } catch (RouteNotFoundException $e) {
             return $this->page404($this->request);
         } catch (Exception $e) {
