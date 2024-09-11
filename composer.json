@@ -4,7 +4,7 @@
     "homepage": "https://github.com/v-dem/queasy-framework/",
     "keywords": ["php", "framework", "mvc"],
     "license": "LGPL-3.0-only",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "minimum-stability": "dev",
     "authors": [
         {
@@ -24,13 +24,13 @@
     "require-dev": {
         "php": ">=7.1.0",
         "phpunit/phpunit": "~10",
-        "v-dem/queasy-helper": "dev-master",
+        "v-dem/queasy-helper": "1.*",
         "ext-xdebug": "*"
     },
     "suggest": {
-        "queasy/config": "Configuration provider package, supports PHP (and multifile configs in this case), INI, XML and JSON (and YAML in future) formats",
-        "queasy/log": "PSR-3 compatible logger package, supports file system log writer, console and email (using mail() function)",
-        "queasy/db": "PDO wrapper classes, simple SQL builder"
+        "v-dem/queasy-config": "Configuration provider package, supports PHP (and multifile configs in this case), INI, XML and JSON (and YAML in future) formats",
+        "v-dem/queasy-log": "PSR-3 compatible logger package, supports file system log writer, console and email (using mail() function)",
+        "v-dem/queasy-db": "PDO wrapper classes, simple SQL builder"
     },
     "autoload":{
         "psr-4":{
@@ -43,6 +43,6 @@
         }
     },
     "scripts": {
-        "test": "phpunit --coverage-clover coverage.xml"
+        "test": "XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-clover coverage.xml"
     }
 }

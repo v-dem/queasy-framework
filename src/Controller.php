@@ -44,7 +44,7 @@ class Controller
         return $this->app->response
             ->withHeader('Allow', implode(', ', $httpMethodsArray))
             ->withBody($this->app->stream)
-            ->withStatus(204);
+            ->withStatus(200);
     }
 
     protected function preview($__page, array $__data = array())

@@ -52,9 +52,13 @@ class App implements ContainerInterface
                 throw new InvalidArgumentException(sprintf('Invalid handler type "%s".', gettype($handler)));
             }
 
-            if (is_string($handler)) {
+            if (is_string($handler)) { // Class name
                 $controller = new $handler($this);
                 $method = strtolower($this->request->getMethod());
+                if (!method_exists($controller, $method)) {
+                    return $this->page501($this->request);
+                }
+
                 $handler = array($controller, $method);
             }
 
@@ -184,6 +188,15 @@ class App implements ContainerInterface
         return $this->response
             ->withBody($this->stream)
             ->withStatus(500);
+    }
+
+    protected function page501()
+    {
+        $this->stream->write('Not implemented.');
+
+        return $this->response
+            ->withBody($this->stream)
+            ->withStatus(501);
     }
 
     private function parseArgs($args)
