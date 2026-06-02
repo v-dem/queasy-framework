@@ -5,7 +5,7 @@ namespace queasy\framework\tests;
 use PHPUnit\Framework\TestCase;
 
 use queasy\framework\App;
-use queasy\framework\ContainerException;
+use queasy\container\ContainerException;
 
 class ServiceContainerTest extends TestCase
 {
@@ -28,16 +28,9 @@ class ServiceContainerTest extends TestCase
     public function testService()
     {
         $container = new App([
-            'db' => [
-                'class' => TestService::class,
-                'construct' => [
-                    [
-                        'value' => 123
-                    ], [
-                        'service' => 'this'
-                    ]
-                ]
-            ]
+            'db' => static function($app) {
+                return new TestService(123, $app);
+            }
         ]);
 
         $this->assertTrue($container->has('db'));
