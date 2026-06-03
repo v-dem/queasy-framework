@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<ruleset name="Custom Ruleset">
+    <rule ref="WordPress">
+        <exclude name="WordPress.Security.ValidatedSanitizedInput.InputNotSanitized" />
+        <exclude name="WordPress.Security.ValidatedSanitizedInput.MissingUnslash" />
+    </rule>
+</ruleset>
