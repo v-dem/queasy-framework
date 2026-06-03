@@ -17,15 +17,23 @@ class Controller
 
     protected $files;
 
-    public function __construct(App $app)
+    protected $request;
+
+    protected $response;
+
+    public function __construct(App $app, $request, $response)
     {
         $this->app = $app;
 
-        $this->get = $app->request->getQueryParams();
+        $this->get = $request->getQueryParams();
 
-        $this->post = $app->request->getParsedBody();
+        $this->post = $request->getParsedBody();
 
-        $this->files = $app->request->getUploadedFiles();
+        $this->files = $request->getUploadedFiles();
+
+        $this->request = $request;
+
+        $this->response = $response;
     }
 
     public function options()
@@ -41,9 +49,8 @@ class Controller
             $httpMethodsArray[] = strtoupper($method->getName());
         }
 
-        return $this->app->response
+        return $this->response
             ->withHeader('Allow', implode(', ', $httpMethodsArray))
-            ->withBody($this->app->stream)
             ->withStatus(200);
     }
 
@@ -66,9 +73,9 @@ class Controller
     {
         $body = $this->preview($page, $data);
 
-        $this->app->stream->write($body);
+        $this->response->getStream()->write($body);
 
-        return $this->app->response
+        return $this->response
             ->withBody($this->app->stream)
             ->withStatus($responseCode);
     }
