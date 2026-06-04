@@ -76,16 +76,12 @@ class App extends ServiceContainer
 
     protected function page500()
     {
-        $this->stream->write('Internal error.');
-
         return $this->createResponse('Internal error.')
             ->withStatus(500);
     }
 
     protected function page501()
     {
-        $this->stream->write('Not implemented.');
-
         return $this->createResponse('Not implemented.')
             ->withStatus(501);
     }
