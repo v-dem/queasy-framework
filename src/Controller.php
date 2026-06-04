@@ -73,10 +73,10 @@ class Controller
     {
         $body = $this->preview($page, $data);
 
-        $this->response->getStream()->write($body);
+        $this->response->getBody()->write($body);
 
         return $this->response
-            ->withBody($this->app->stream)
+            ->withHeader('Content-Type', 'text/html')
             ->withStatus($responseCode);
     }
 
@@ -84,11 +84,10 @@ class Controller
     {
         $json = json_encode($data, $jsonFlags);
 
-        $this->app->stream->write($json);
+        $this->response->getBody()->write($json);
 
-        return $this->app->response
+        return $this->response
             ->withHeader('Content-Type', 'application/json')
-            ->withBody($this->app->stream)
             ->withStatus($responseCode);
     }
 }
