@@ -63,6 +63,8 @@ class App extends ServiceContainer
             return $output;
         } catch (RouteNotFoundException $e) {
             return $this->page404($request);
+        } catch (AuthException $e) {
+            return $this->page403($request);
         } catch (Exception $e) {
             $this->logger->error($e->getMessage());
 
@@ -74,6 +76,12 @@ class App extends ServiceContainer
     {
         return $this->createResponse('The requested URL was not found on this server.')
             ->withStatus(404);
+    }
+
+    protected function page403()
+    {
+        return $this->createResponse('You are not authorized to view this page.')
+            ->withStatus(403);
     }
 
     protected function page500()
