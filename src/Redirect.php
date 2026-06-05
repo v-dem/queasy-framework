@@ -16,7 +16,7 @@ class Redirect
 
     public function path($path = '')
     {
-        return $this->response->withHeader('Location', $baseUrl . $path);
+        return $this->response->withHeader('Location', $this->baseUrl . $path);
     }
 }
 
