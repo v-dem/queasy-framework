@@ -17,7 +17,7 @@ class RouteEntry
     {
         if (is_string($handlerOrArray)) {
             $this->handler = $handlerOrArray;
-        } elseif (is_array($handlerOrArray) || ($handlerOrArray instanceof ArrayAccess)) {
+        } elseif (is_array($handlerOrArray)) {
             if (!isset($handlerOrArray['resource'])) {
                 throw new RouteEntryCorruptedException('Required "resource" key not set.');
             }

@@ -37,6 +37,10 @@ class RegexRouter implements RouteInterface
                 }
                 */
 
+                if ($handler instanceof \queasy\config\Config) {
+                    $handler = $handler->toArray();
+                }
+
                 array_shift($matches);
 
                 return new RouteEntry($handler, $matches);
