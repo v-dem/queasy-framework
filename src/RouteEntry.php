@@ -2,6 +2,7 @@
 
 namespace queasy\framework;
 
+use ArrayAccess;
 use InvalidArgumentException;
 
 class RouteEntry
@@ -16,7 +17,7 @@ class RouteEntry
     {
         if (is_string($handlerOrArray)) {
             $this->handler = $handlerOrArray;
-        } elseif (is_array($handlerOrArray)) {
+        } elseif (is_array($handlerOrArray) || ($handlerOrArray implements ArrayAccess)) {
             if (!isset($handlerOrArray['resource'])) {
                 throw new RouteEntryCorruptedException('Required "resource" key not set.');
             }
@@ -30,7 +31,7 @@ class RouteEntry
                 throw new RouteEntryCorruptedException('Value of "middleware" must be an array.');
             }
         } else {
-            throw new InvalidArgumentException();
+            throw new InvalidArgumentException('Handler must be string or array, given: ' . gettype($handlerOrArray));
         }
 
         $this->arguments = $arguments;
