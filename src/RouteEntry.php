@@ -2,6 +2,8 @@
 
 namespace queasy\framework;
 
+use InvalidArgumentException;
+
 class RouteEntry
 {
     private $handler;
@@ -16,7 +18,7 @@ class RouteEntry
             $this->handler = $handlerOrArray;
         } elseif (is_array($handlerOrArray)) {
             if (!isset($handlerOrArray['resource'])) {
-                throw new RouteEntryCorruptedException();
+                throw new RouteEntryCorruptedException('Required "resource" key not set.');
             }
 
             $this->handler = $handlerOrArray['resource'];
@@ -25,10 +27,10 @@ class RouteEntry
                 : [];
 
             if (!is_array($this->middleware)) {
-                throw new RouteEntryCorruptedException();
+                throw new RouteEntryCorruptedException('Value of "middleware" must be an array.');
             }
         } else {
-            throw new RouteEntryCorruptedException();
+            throw new InvalidArgumentException();
         }
 
         $this->arguments = $arguments;
