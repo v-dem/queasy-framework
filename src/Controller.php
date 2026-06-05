@@ -21,7 +21,9 @@ class Controller
 
     protected $response;
 
-    public function __construct(App $app, $request, $response)
+    protected $redirect;
+
+    public function __construct(App $app, $request, $response, $redirect)
     {
         $this->app = $app;
 
@@ -34,6 +36,8 @@ class Controller
         $this->request = $request;
 
         $this->response = $response;
+
+        $this->redirect = $redirect;
     }
 
     public function options()

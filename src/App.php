@@ -41,7 +41,9 @@ class App extends ServiceContainer
             }
 
             if (is_string($handler)) { // Class name?
-                $controller = new $handler($this, $request, $this->createResponse());
+                $redirect = new Redirect(preg_replace('/index\.php.*/', '', $request->getRequestTarget()), $this->createResponse());
+
+                $controller = new $handler($this, $request, $this->createResponse(), $redirect);
                 $method = strtolower($request->getMethod());
                 if (!is_callable([ $controller, $method ])) { // Check that method exists and is public
                     return $this->page501($request);
