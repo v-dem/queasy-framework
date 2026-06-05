@@ -13,7 +13,7 @@ class RouteEntry
     public function __construct($handlerOrArray, array $arguments)
     {
         if (is_string($handlerOrArray)) {
-            $this->handler = $handler;
+            $this->handler = $handlerOrArray;
         } elseif (is_array($handlerOrArray)) {
             if (!isset($handlerOrArray['resource'])) {
                 throw new RouteEntryCorruptedException();
