@@ -30,9 +30,12 @@ class RegexRouter implements RouteInterface
     {
         foreach ($routes as $route => $handler) {
             if (preg_match($route, $path, $matches)) {
+                // TODO: Create RouteGroup class in future
+                /*
                 if (is_array($handler)) {
                     return $this->routeLookup($handler, $path);
                 }
+                */
 
                 array_shift($matches);
 
