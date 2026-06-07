@@ -14,15 +14,13 @@ use Closure;
 
 class MiddlewareHandler extends ServiceContainer implements LoggerAwareInterface
 {
-    private $config;
-
     private $app;
 
     private $logger;
 
     public function __construct($config, App $app)
     {
-        $this->config = $config;
+        parent::__construct($config);
 
         $this->app = $app;
 
