@@ -9,6 +9,8 @@ use Psr\Http\Message\ServerRequestInterface;
 
 use Psr\Http\Server\RequestHandlerInterface;
 
+use Closure;
+
 class MiddlewareQueueProcessor implements RequestHandlerInterface
 {
     private $middlewares;
