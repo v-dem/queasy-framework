@@ -9,9 +9,9 @@ class RouteEntry
 {
     private $handler;
 
-    private $middleware;
+    private $middleware = [];
 
-    private $arguments;
+    private $arguments = [];
 
     public function __construct($handlerOrArray, array $arguments)
     {
