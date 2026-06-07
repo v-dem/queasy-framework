@@ -4,6 +4,7 @@ namespace queasy\framework;
 
 use queasy\container\ServiceContainer;
 
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 use Psr\Http\Server\RequestHandlerInterface;
@@ -20,7 +21,7 @@ class MiddlewareQueueProcessor implements RequestHandlerInterface
         $this->handler = $handler;
     }
 
-    public function handle(ServerRequestInterface $request)
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
         if (empty($this->middlewares)) {
             return $this->handler($request);
