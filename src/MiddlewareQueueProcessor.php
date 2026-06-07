@@ -26,7 +26,9 @@ class MiddlewareQueueProcessor implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         if (empty($this->middlewares)) {
-            return $this->handler($request);
+            $handler = $this->handler;
+
+            return $handler($request);
         }
 
         $middleware = array_shift($this->middlewares);
