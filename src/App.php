@@ -35,6 +35,7 @@ class App extends ServiceContainer
             $route = $this->router->route($request);
             $handler = $route->getHandler();
             $arguments = $route->getArguments();
+            $middlewares = $route->getMiddleware();
 
             if (!is_callable($handler) && !is_string($handler)) {
                 throw new InvalidArgumentException(sprintf('Invalid handler type "%s".', gettype($handler)));
@@ -56,8 +57,12 @@ class App extends ServiceContainer
                 return System::callUserFuncArray($handler, $arguments);
             };
 
+            if (count($middlewares) && !isset($this->middleware)) {
+                throw new MiddlewareException('No middleware configured.');
+            }
+
             $output = isset($this->middleware)
-                ? $this->middleware->handle($request, $closure)
+                ? $this->middleware->handle($middlewares, $closure, $request)
                 : $closure();
 
             return $output;

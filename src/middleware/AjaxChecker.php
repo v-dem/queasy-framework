@@ -2,32 +2,31 @@
 
 namespace queasy\framework\middleware;
 
-use queasy\framework\MiddlewareInterface;
-
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
 
 use Closure;
 
-class HoneypotProtection implements MiddlewareInterface
+class AjaxChecker implements MiddlewareInterface
 {
     /**
      * Handle an incoming request.
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request
-     * @param \Closure $next
+     * @param \Psr\Http\Server\MiddlewareInterface $next
      */
     #![ReturnTypeWillChange]
-    public function handle(ServerRequestInterface $request, Closure $next)
+    public function process(ServerRequestInterface $request, MiddlewareInterface $next)
     {
         $serverParams = $request->getServerParams();
 
-        $isAjax = return isset($serverParams['HTTP_X_REQUESTED_WITH'])
+        $isAjax = isset($serverParams['HTTP_X_REQUESTED_WITH'])
             && !empty($serverParams['HTTP_X_REQUESTED_WITH'])
             && ('xmlhttprequest' === strtolower($serverParams['HTTP_X_REQUESTED_WITH']))
             || ('xmlhttprequest' === strtolower($request->getHeaderLine('X-Requested-With')))
             || ('application/json' === strtolower($request->getHeaderLine('Accept')));
 
-        return $next($request->withAttribute('isAjax', $isAjax));
+        return $next->handle($request->withAttribute('isAjax', $isAjax));
     }
 }
 
