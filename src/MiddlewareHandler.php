@@ -10,6 +10,8 @@ use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
+use Closure;
+
 class MiddlewareHandler extends ServiceContainer implements LoggerAwareInterface
 {
     private $config;
@@ -21,8 +23,6 @@ class MiddlewareHandler extends ServiceContainer implements LoggerAwareInterface
     public function __construct($config, App $app)
     {
         $this->config = $config;
-
-        $this->handler = $handler;
 
         $this->app = $app;
 
