@@ -2,6 +2,7 @@
 
 namespace queasy\framework\middleware;
 
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 
@@ -16,7 +17,7 @@ class AjaxChecker implements MiddlewareInterface
      * @param \Psr\Http\Server\MiddlewareInterface $next
      */
     #![ReturnTypeWillChange]
-    public function process(ServerRequestInterface $request, MiddlewareInterface $next)
+    public function process(ServerRequestInterface $request, MiddlewareInterface $next): ResponseInterface
     {
         $serverParams = $request->getServerParams();
 

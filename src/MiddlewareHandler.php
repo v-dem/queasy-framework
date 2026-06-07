@@ -5,6 +5,7 @@ namespace queasy\framework;
 use queasy\container\ServiceContainer;
 
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ResponseInterface;
 
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
@@ -27,7 +28,7 @@ class MiddlewareHandler extends ServiceContainer implements LoggerAwareInterface
         $this->logger = new NullLogger();
     }
 
-    public function handle(array $middlewares = array(), Closure $handler, ServerRequestInterface $request)
+    public function handle(array $middlewares = array(), Closure $handler, ServerRequestInterface $request): ResponseInterface
     {
         foreach ($middlewares as &$middleware) {
             $middleware = $this->$middleware;
