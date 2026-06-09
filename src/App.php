@@ -41,19 +41,21 @@ class App extends ServiceContainer
                 throw new InvalidArgumentException(sprintf('Invalid handler type "%s".', gettype($handler)));
             }
 
-            if (is_string($handler)) { // Class name?
-                $redirect = new Redirect(preg_replace('/index\.php.*/', '', $request->getRequestTarget()), $this->createResponse());
+            $closure = function(ServerRequestInterface $request) use($handler, $arguments) {
+                if (is_string($handler)) { // Class name, not callable
+                    $redirect = new Redirect(preg_replace('/index\.php.*/', '', $request->getRequestTarget()), $this->createResponse());
 
-                $controller = new $handler($this, $request, $this->createResponse(), $redirect);
-                $method = strtolower($request->getMethod());
-                if (!is_callable([ $controller, $method ])) { // Check that method exists and is public
-                    return $this->page501($request);
+                    $controller = new $handler($this, $request, $this->createResponse(), $redirect);
+                    $method = strtolower($request->getMethod());
+                    if (!is_callable([ $controller, $method ])) { // Check that method exists and is public
+                        return $this->page501($request);
+                    }
+
+                    $handler = array($controller, $method);
+                } else {
+                    // TODO: Implement handler function call
                 }
 
-                $handler = array($controller, $method);
-            }
-
-            $closure = static function() use($handler, $arguments) {
                 return System::callUserFuncArray($handler, $arguments);
             };
 
@@ -63,7 +65,7 @@ class App extends ServiceContainer
 
             $output = isset($this->middleware)
                 ? $this->middleware->handle($middlewares, $closure, $request)
-                : $closure();
+                : $closure($request);
 
             return $output;
         } catch (RouteNotFoundException $e) {
