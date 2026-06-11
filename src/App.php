@@ -7,6 +7,7 @@ use InvalidArgumentException;
 
 use queasy\container\ServiceContainer;
 
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 use Psr\Log\NullLogger;
@@ -46,25 +47,38 @@ class App extends ServiceContainer
                     $redirect = new Redirect(preg_replace('/index\.php.*/', '', $request->getRequestTarget()), $this->createResponse());
 
                     $controller = new $handler($this, $request, $this->createResponse(), $redirect);
-                    $method = strtolower($request->getMethod());
-                    if (!is_callable([ $controller, $method ])) { // Check that method exists and is public
+                    if (!is_callable([ $controller, $request->getMethod() ])) { // Check that method exists and is public
                         return $this->page501($request);
                     }
 
-                    $handler = array($controller, $method);
+                    $handler = [ $controller, $request->getMethod() ];
                 } else {
                     // TODO: Implement handler function call
                 }
 
-                return System::callUserFuncArray($handler, $arguments);
+                $response = System::callUserFuncArray($handler, $arguments);
+                if (!$response) {
+                    $reponse = $this->createResponse();
+                }
+
+                return $response;
             };
 
             if (count($middlewares) && !isset($this->middleware)) {
                 throw new MiddlewareException('No middleware configured.');
             }
 
+            $middlewaresPrepared = [];
+            foreach ($middlewares as $method => $middleware) {
+                if (is_int($method)) {
+                    $middlewaresPrepared[] = $middleware;
+                } elseif ($request->getMethod() === $method) {
+                    $middlewaresPrepared = array_merge($middlewaresPrepared, $middleware);
+                }
+            }
+
             $output = isset($this->middleware)
-                ? $this->middleware->handle($middlewares, $closure, $request)
+                ? $this->middleware->handle($middlewaresPrepared, $closure, $request)
                 : $closure($request);
 
             return $output;
