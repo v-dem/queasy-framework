@@ -44,14 +44,12 @@ class App extends ServiceContainer
 
             $closure = function(ServerRequestInterface $request) use($handler, $arguments) {
                 if (is_string($handler)) { // Class name, not callable
-                    $redirect = new Redirect(preg_replace('/index\.php.*/', '', $request->getRequestTarget()), $this->createResponse());
-
-                    $controller = new $handler($this, $request, $this->createResponse(), $redirect);
-                    if (!is_callable([ $controller, $request->getMethod() ])) { // Check that method exists and is public
+                    $resource = new $handler($this, $request, $this->createResponse());
+                    if (!is_callable([ $resource, $request->getMethod() ])) { // Check that method exists and is public
                         return $this->page501($request);
                     }
 
-                    $handler = [ $controller, $request->getMethod() ];
+                    $handler = [ $resource, $request->getMethod() ];
                 } else {
                     // TODO: Implement handler function call
                 }

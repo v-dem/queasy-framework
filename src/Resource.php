@@ -7,7 +7,7 @@ use queasy\http\Stream;
 use ReflectionClass;
 use ReflectionMethod;
 
-class Controller
+class Resource
 {
     protected $app;
 
@@ -21,9 +21,7 @@ class Controller
 
     protected $response;
 
-    protected $redirect;
-
-    public function __construct(App $app, $request, $response, $redirect)
+    public function __construct(App $app, $request, $response)
     {
         $this->app = $app;
 
@@ -36,8 +34,6 @@ class Controller
         $this->request = $request;
 
         $this->response = $response;
-
-        $this->redirect = $redirect;
     }
 
     public function options()
