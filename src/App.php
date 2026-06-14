@@ -70,7 +70,7 @@ class App extends ServiceContainer
             foreach ($middlewares as $method => $middleware) {
                 if (is_int($method)) {
                     $middlewaresPrepared[] = $middleware;
-                } elseif ($request->getMethod() === $method) {
+                } elseif (strtolower($request->getMethod()) === strtolower($method)) {
                     $middlewaresPrepared = array_merge($middlewaresPrepared, $middleware);
                 }
             }
