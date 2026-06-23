@@ -68,9 +68,7 @@ class App extends ServiceContainer
 
             $middlewaresPrepared = [];
             foreach ($middlewares as $method => $middleware) {
-                if (is_int($method)) {
-                    $middlewaresPrepared[] = $middleware;
-                } elseif (strtolower($request->getMethod()) === strtolower($method)) {
+                if (is_int($method) || strtolower($request->getMethod()) === strtolower($method)) {
                     $middlewaresPrepared = array_merge($middlewaresPrepared, $middleware);
                 }
             }
