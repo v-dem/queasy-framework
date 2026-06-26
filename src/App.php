@@ -71,7 +71,7 @@ class App extends ServiceContainer
                 if (is_int($method)) {
                     $middlewaresPrepared[] = $middleware;
                 } elseif (strtolower($request->getMethod()) === strtolower($method)) {
-                    if (is_string[$middleware]) {
+                    if (is_string($middleware)) {
                         $middleware = [ $middleware ];
                     }
 
