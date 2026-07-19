@@ -56,7 +56,7 @@ class App extends ServiceContainer
 
                 $response = System::callUserFuncArray($handler, $arguments);
                 if (!$response) {
-                    $reponse = $this->createResponse();
+                    $response = $this->createResponse();
                 }
 
                 return $response;
